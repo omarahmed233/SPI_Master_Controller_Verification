@@ -8,6 +8,7 @@ package test_pkg;
   import env_pkg::*;
   import apb_pkg::*;
   import spi_pkg::*;
+  `include "v_sequence.sv"
   `include "test_base.sv"
 endpackage
 

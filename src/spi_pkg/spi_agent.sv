@@ -28,7 +28,7 @@ class spi_agent extends uvm_agent;
     if (agent_cfg.is_active == UVM_ACTIVE) begin
       sqr = spi_sequencer::type_id::create("sqr", this);
       drv = spi_driver::type_id::create("drv", this);
-      drv.spi_vif = agent_cfg.spi_vif
+      drv.spi_vif = agent_cfg.spi_vif;
     end
 
   endfunction

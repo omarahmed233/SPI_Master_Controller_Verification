@@ -7,6 +7,7 @@ package env_pkg;
   import uvm_pkg::*;
   import apb_pkg::*;
   import spi_pkg::*;
+  `include "v_sequencer.sv"
   `include "my_env.sv"
 endpackage
 
