@@ -37,17 +37,6 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
   // BFM Methods (Task-based implementation)
   // =========================================================================
 
-  // Register offsets (Specific to the attached SPI IP)
-  localparam [7:0] CTRL     = 8'h00;
-  localparam [7:0] STATUS   = 8'h04;
-  localparam [7:0] TX_DATA  = 8'h08;
-  localparam [7:0] RX_DATA  = 8'h0C;
-  localparam [7:0] CLK_DIV  = 8'h10;
-  localparam [7:0] SS_CTRL  = 8'h14;
-  localparam [7:0] INT_EN   = 8'h18;
-  localparam [7:0] INT_STAT = 8'h1C;
-  localparam [7:0] DELAY    = 8'h20;
-
   initial begin
       cb_master.psel    <= 1'b0;
       cb_master.penable <= 1'b0;
@@ -77,7 +66,7 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
       cb_master.pwrite  <= 1'b0;
   endtask
 
-  task automatic apb_read(input [AW-1:0] addr, output [DW-1:0] data);
+  task automatic apb_read(input [AW-1:0] addr);
       @(cb_master);
       // SETUP phase
       cb_master.psel    <= 1'b1;
@@ -90,20 +79,29 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
       cb_master.penable <= 1'b1;
       
       do @(cb_master); while (!cb_master.pready);
-      
-      data = cb_master.prdata;
-      
+            
       cb_master.psel    <= 1'b0;
       cb_master.penable <= 1'b0;
   endtask
 
-  // Extension: Helper task to poll the STATUS.BUSY bit (Bit 0)
-  task automatic wait_not_busy();
-      logic [DW-1:0] status_val;
+  task automatic monitor_transaction(
+      output logic [AW-1:0]   addr,
+      output logic            pwrite,
+      output logic [DW-1:0]   wdata,
+      output logic [DW-1:0]   rdata
+  );
+
       do begin
-          apb_read(STATUS, status_val);
-      end while (status_val[0] == 1'b1);
+          @(cb_monitor);
+      end while (!(cb_monitor.psel && cb_monitor.penable));
+
+      addr   = cb_monitor.paddr;
+      pwrite = cb_monitor.pwrite;
+      wdata  = cb_monitor.pwdata;
+      rdata  = cb_monitor.prdata;
+
   endtask
+
 
 endinterface
 

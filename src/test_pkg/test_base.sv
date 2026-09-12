@@ -41,6 +41,22 @@ class test_base extends uvm_test;
     uvm_config_db#(apb_agent_cfg)::set(this, "env.apb_agent_instance", "apb_configuration", apb_cfg);
 
   endfunction
+
+  task run_phase(uvm_phase phase);
+    v_sequence v_seq;
+
+    phase.raise_objection(this, "Starting virtual sequence in test_base");
+
+    `uvm_info("TEST_BASE", "Run phase started", UVM_LOW)
+
+    v_seq = v_sequence::type_id::create("v_seq");
+
+    v_seq.start(env.v_sequencer_instance);
+
+    `uvm_info("TEST_BASE", "Virtual sequence finished", UVM_LOW)
+
+    phase.drop_objection(this, "Finished virtual sequence in test_base");
+  endtask
   
 endclass
 

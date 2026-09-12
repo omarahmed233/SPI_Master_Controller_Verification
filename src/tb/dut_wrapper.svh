@@ -1,5 +1,5 @@
-`ifndef SPI_DUT_WRAPPER_SV
-    `define SPI_DUT_WRAPPER_SV
+`ifndef SPI_DUT_WRAPPER_SVH
+    `define SPI_DUT_WRAPPER_SVH
 `timescale 1ns/1ps
 
 module dut_wrapper (
