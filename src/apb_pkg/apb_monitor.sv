@@ -30,9 +30,14 @@ class apb_monitor extends uvm_monitor;
         .rdata (apb_monitor_item.prdata)
       );
 
-      `uvm_info("APB_MON", $sformatf("[Time: %0t] Captured APB %s at Address 0x%0h", 
-                $time, (apb_monitor_item.pwrite ? "WRITE" : "READ"), apb_monitor_item.paddr), UVM_MEDIUM)
-
+     `uvm_info("APB_MON", 
+          $sformatf("[%0t] Captured APB %s | Addr: 0x%0h | Data: 0x%0h", 
+                    $time, 
+                    (apb_monitor_item.pwrite ? "WRITE" : "READ"), 
+                    apb_monitor_item.paddr, 
+                    (apb_monitor_item.pwrite ? apb_monitor_item.pwdata : apb_monitor_item.prdata)), 
+          UVM_MEDIUM)
+          
       apb_monitor_port.write(apb_monitor_item);
     end
   endtask
