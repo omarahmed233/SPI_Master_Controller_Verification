@@ -18,7 +18,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
   virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
     
-
+    wait(apb_vif.presetn == 1'b1);
     forever begin
       seq_item_port.get_next_item(req);
      `uvm_info("APB_DRIVER", 

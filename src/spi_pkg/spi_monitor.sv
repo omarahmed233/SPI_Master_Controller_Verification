@@ -22,6 +22,7 @@ class spi_monitor extends uvm_monitor;
 
     forever begin
 
+      wait(spi_vif.presetn == 1'b1);
       spi_vif.monitor_transaction(
         .mode(spi_vif.xfer_mode),
         .width(spi_vif.xfer_width),

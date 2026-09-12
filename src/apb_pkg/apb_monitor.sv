@@ -16,13 +16,15 @@ class apb_monitor extends uvm_monitor;
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     apb_monitor_port = new("apb_monitor_port", this);
-    apb_monitor_item = apb_seq_item::type_id::create("apb_monitor_item");
   endfunction
 
   virtual task run_phase(uvm_phase phase);
 
+    wait(apb_vif.presetn == 1'b1);
+    
     forever begin
 
+      apb_monitor_item = apb_seq_item::type_id::create("apb_monitor_item");
       apb_vif.monitor_transaction(
         .addr  (apb_monitor_item.paddr),
         .pwrite(apb_monitor_item.pwrite),
@@ -30,15 +32,15 @@ class apb_monitor extends uvm_monitor;
         .rdata (apb_monitor_item.prdata)
       );
 
-     `uvm_info("APB_MON", 
+     `uvm_info("APB_MONITOR",   
           $sformatf("[%0t] Captured APB %s | Addr: 0x%0h | Data: 0x%0h", 
                     $time, 
                     (apb_monitor_item.pwrite ? "WRITE" : "READ"), 
                     apb_monitor_item.paddr, 
                     (apb_monitor_item.pwrite ? apb_monitor_item.pwdata : apb_monitor_item.prdata)), 
           UVM_MEDIUM)
-          
-      apb_monitor_port.write(apb_monitor_item);
+
+      //apb_monitor_port.write(apb_monitor_item);
     end
   endtask
   

@@ -24,20 +24,29 @@ module testbench();
     assign spi_ifc.xfer_width     = dut_wrapper_dut.u_dut.u_core.xfer_width;
 
     initial begin
-        sys_reset = 0;
-        #6;
-        sys_reset = 1;
         #150;
         $finish;
     end
 
     initial begin
-        $timeformat(-9, 0, " ns", 5);
-        $display("from top module: tb begins");
         uvm_config_db#(virtual apb_master_ifc #())::set(null, "uvm_test_top", "apb_vif", apb_ifc);
         uvm_config_db#(virtual spi_slave_ifc)::set(null, "uvm_test_top", "spi_vif", spi_ifc);
+        $display("from top module: tb begins");
+        $timeformat(-9, 0, " ns", 5);
         run_test("");  // specifieed in cmd
     end
+
+    initial begin
+        sys_reset = 0;
+        #6;
+        sys_reset = 1;
+    end
+    
+    // initial begin
+    //     $monitor(dut_wrapper_dut.u_dut.u_regfile.PENABLE);
+    //     $monitor(dut_wrapper_dut.u_dut.u_regfile.PSEL);
+    // end
+    
 
     dut_wrapper dut_wrapper_dut(
         .apb(apb_ifc),

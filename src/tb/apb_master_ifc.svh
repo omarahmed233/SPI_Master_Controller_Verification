@@ -25,7 +25,7 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
     endclocking
 
     clocking cb_monitor @(posedge pclk);
-        default input #1;
+        default input #2;
         input psel, penable, pwrite, paddr, pwdata,irq;
         input prdata, pready, pslverr;
     endclocking
@@ -58,6 +58,7 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
         // ACCESS phase
         cb_master.penable <= 1'b1;
 
+        @(cb_master);
         while (!cb_master.pready)
             @(cb_master);
 
@@ -79,6 +80,7 @@ interface apb_master_ifc #(parameter int AW = 8, parameter int DW = 32) (
         // ACCESS phase
         cb_master.penable <= 1'b1;
 
+        @(cb_master);
         while (!cb_master.pready)
             @(cb_master);
             
